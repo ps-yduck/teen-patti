@@ -1,2 +1,1 @@
-# teen patti
- CS Proj
+# Rang
