@@ -49,6 +49,9 @@ function moveValidInValue(pile, card) {
             rankMap[cardRank] > rankMap[nextNonEightCard[0]]) {
             return false;
         }
+        else if (nextNonEightCard === "") {
+            return true;
+        }
         else if (rankMap[cardRank] >= rankMap[nextNonEightCard[0]]) {
             return true;
         }

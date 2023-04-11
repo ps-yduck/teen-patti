@@ -44,6 +44,7 @@ export function getSuitSymbol(suit: any) {
 export function moveValidInValue(pile: any, card: any) {
   // power card shouldnt enter here it should go throu power fn route
   if (pile === undefined || pile.length === 0) {
+    //from power fn this cond wont be called, but from other places it is imp
     return true;
   }
   const pileRank = pile[pile.length - 1][0];
@@ -78,6 +79,8 @@ export function moveValidInValue(pile: any, card: any) {
       rankMap[cardRank] > rankMap[nextNonEightCard[0]]
     ) {
       return false;
+    } else if (nextNonEightCard === "") {
+      return true;
     } else if (rankMap[cardRank] >= rankMap[nextNonEightCard[0]]) {
       return true;
     } else {
@@ -94,23 +97,30 @@ export function moveValidInValue(pile: any, card: any) {
 
 export function moveValidInPower(myCards: any, pile: any, card: any) {
   //before it check card is power card
-  console.log("moveValidInPower", myCards, pile, card);
-  for (let i = 0; i < myCards.length; i++) {
-    if (
-      myCards[i] !== card &&
-      myCards[i][0] !== "8" &&
-      myCards[i][0] !== "7" &&
-      myCards[i][0] !== "2" &&
-      myCards[i][0] !== "1"
-    ) {
-      console.log("moveValidInPowerhhh", myCards[i][0], card);
-      if (moveValidInValue(pile, myCards[i])) {
-        return false;
+  if (pile === undefined || pile.length === 0) {
+    //new change made
+    return true;
+  } else {
+    // for non empty pile
+    console.log("moveValidInPower", myCards, pile, card);
+    for (let i = 0; i < myCards.length; i++) {
+      if (
+        myCards[i] !== card &&
+        myCards[i][0] !== "8" &&
+        myCards[i][0] !== "7" &&
+        myCards[i][0] !== "2" &&
+        myCards[i][0] !== "1"
+      ) {
+        console.log("moveValidInPowerhhh", myCards[i][0], card);
+        if (moveValidInValue(pile, myCards[i])) {
+          console.log("moveValidInPowerhhh false");
+          return false;
+        }
       }
     }
+    console.log("moveValidInPoweryyy true");
+    return true;
   }
-  console.log("moveValidInPoweryyy true");
-  return true;
 }
 
 export function removeCard(myCards: any, card: any) {

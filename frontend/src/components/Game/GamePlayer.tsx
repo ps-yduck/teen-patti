@@ -12,10 +12,10 @@ interface GamePlayerProps {
 }
 
 function GamePlayer(props: GamePlayerProps) {
-  let listItems: any = [];
+  let faceUpList: any = [];
   console.log("props.player: ", props.player);
   try {
-    listItems = props.player.partition.faceup.map((card: any) => {
+    faceUpList = props.player.partition.faceup.map((card: any) => {
       const css = writecss(card);
       let suit = css[1];
       let rank = css[0];
@@ -40,15 +40,15 @@ function GamePlayer(props: GamePlayerProps) {
         <li>
           <div className="card back">*</div>
         </li>
-        {listItems[0] ? listItems[0] : <li></li>}
+        {faceUpList[0] ? faceUpList[0] : <li></li>}
         <li>
           <div className="card back">*</div>
         </li>
-        {listItems[1] ? listItems[1] : <li></li>}
+        {faceUpList[1] ? faceUpList[1] : <li></li>}
         <li>
           <div className="card back">*</div>
         </li>
-        {listItems[2] ? listItems[2] : <li></li>}
+        {faceUpList[2] ? faceUpList[2] : <li></li>}
       </ul>
     </div>
   );

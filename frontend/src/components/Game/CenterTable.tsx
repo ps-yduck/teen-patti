@@ -23,8 +23,8 @@ function CenterTable({ socket, pile }: CenterTableProps) {
           return (
             <li>
               <div className={`card rank-${css[0]} ${css[1]}`}>
-                <span className="rank">{card[0]}</span>
-                <span className="suit"> {getSuitSymbol(card[1])}</span>
+                <span className="rank">{css[0]}</span>
+                <span className="suit"> {getSuitSymbol(css[1])}</span>
               </div>
             </li>
           );

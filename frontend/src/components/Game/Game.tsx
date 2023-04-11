@@ -23,6 +23,7 @@ function GamePage({ socket }: GamePageProps) {
   const [player3, setPlayer3] = useState({});
   const [playerMe, setPlayerMe] = useState({});
   const [msg, setMsg] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
   const id: any = sessionStorage.getItem("id");
   const state = useLocation();
   const name = state.state.name;
@@ -85,6 +86,11 @@ function GamePage({ socket }: GamePageProps) {
         }
       }
     });
+    socket.on("gameOver", (data) => {
+      console.log("game over", data);
+      setMsg(data.winnermsg);
+      setGameOver(true);
+    });
   }, []);
   console.log("rendered");
 
@@ -120,6 +126,7 @@ function GamePage({ socket }: GamePageProps) {
             setPile={setPile}
             id={id}
             name={name}
+            gameOver={gameOver}
           />
         </div>
       </div>
