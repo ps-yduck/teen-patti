@@ -37,7 +37,7 @@ function GamePage({ socket }: GamePageProps) {
       setDeck(data.deck);
       setTurn(data.turn);
       setMsg(data.msg);
-
+      setGameOver(data.gameOver);
       setPlayerMe(data.clientCards[id]);
       let playerid = 1;
       for (const [key, value] of Object.entries(data.clientCards)) {
@@ -66,6 +66,7 @@ function GamePage({ socket }: GamePageProps) {
       setPile(data.pile);
       setMsg(data.msg);
       setPlayerMe(data.clientCards[id]);
+      setGameOver(data.gameOver);
       let playerid = 1;
       for (const [key, value] of Object.entries(data.clientCards)) {
         if (key !== id) {

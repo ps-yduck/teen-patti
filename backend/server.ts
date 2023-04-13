@@ -10,10 +10,10 @@ import { hasAnyValidCard } from "./utils";
 //////   utils  //////
 const createPartition = (cardsDeck) => {
   //random partition of cards
-  let cards = cardsDeck;
-  let part = [];
+  let cards: any = cardsDeck;
+  let part: any = [];
   for (let i = 0; i < 9; i++) {
-    let randomIndex = Math.floor(Math.random() * cards.length);
+    let randomIndex: any = Math.floor(Math.random() * cards.length);
     part.push(cards[randomIndex]);
     cards.splice(randomIndex, 1);
   }
@@ -50,6 +50,7 @@ const clientMap = new Map();
 let players = 0;
 let gameRoomPlayers = new Map(); // keeps unique consistent id and name
 let gameRoom = "gameRoom";
+let gameOver = false;
 const odds_for_player1 = true; // let it true to give best cards to player1 to check disable condition on winning game, by default false
 const cardsDeck = [
   "2S",
@@ -182,6 +183,7 @@ io.on("connection", (socket) => {
         deck: remainingCards.slice(1, remainingCards.length),
         turn: Array.from(gameRoomPlayers.keys())[turn],
         msg: ["Game Started"],
+        gameOver: gameOver,
       };
     }
     if (players > 4) {
@@ -221,9 +223,12 @@ io.on("connection", (socket) => {
         winnermsg: clientsState.msg.concat(winnermsg),
       };
       io.to(gameRoom).emit("gameOver", data);
+      gameOver = true;
+      clientsState.gameOver = gameOver;
     } else {
       turn = (turn + 1) % 4;
       clientsState.turn = Array.from(gameRoomPlayers.keys())[turn];
+
       try {
         if (data.pile[data.pile.length - 1][0] === "1") {
           // burn on 10
@@ -238,9 +243,12 @@ io.on("connection", (socket) => {
 
       //clientsState.pile = data.pile;
       clientsState.msg = clientsState.msg.concat(data.msg);
+      clientsState.msg = clientsState.msg.concat(
+        `${clientsState.clientCards[clientsState.turn].name}'s turn is next`
+      );
       clientsState.deck = data.deck;
       clientsState.clientCards[data.id].partition = data.partition;
-      console.log("new turn", clientsState.turn);
+      //console.log("new turn", clientsState.turn);
       console.log("new cleintsState", clientsState);
       if (
         (clientsState.clientCards[clientsState.turn].partition.mycards.length >
@@ -262,7 +270,7 @@ io.on("connection", (socket) => {
       ) {
         //console.log("valid card in hand");
       } else {
-        console.log("invalid card in hand");
+        //console.log("invalid card in hand");
         clientsState.msg = clientsState.msg.concat(
           `Player ${
             clientsState.clientCards[clientsState.turn].name
@@ -277,6 +285,7 @@ io.on("connection", (socket) => {
         clientsState.turn = Array.from(gameRoomPlayers.keys())[turn];
       }
       //console.log("new turn sent", clientsState.msg);
+      clientsState.gameOver = gameOver;
       io.to(gameRoom).emit("newTurn", clientsState);
     }
   });

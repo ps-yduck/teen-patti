@@ -1,7 +1,6 @@
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   writecss,
@@ -27,6 +26,8 @@ function MyCard(props: MyCardProps) {
   let faceDownList: any = [];
   let myCardsList: any = [];
   let cardNotTwo = true;
+  let msg = "";
+
   //console.log("props pile error: ", props.pile);
   const cardClickHandler = async (card: any) => {
     let valid = false;
@@ -59,6 +60,10 @@ function MyCard(props: MyCardProps) {
           props.player.partition.mycards,
           card
         );
+        const css = writecss(card);
+        const rank = css[0];
+        const suit = css[1];
+        msg = msg + `${props.name} played ${rank} of ${suit} and `;
         // props.pile.push(card);
         props.setPile([...props.pile, card]);
         if (props.deck.length > 0) {
@@ -92,17 +97,21 @@ function MyCard(props: MyCardProps) {
       }
 
       // alert("Turn Complete");
-      let msg = `${props.name} played ${card[0]} of ${
-        card[1]
-      } and top card of pile was ${
-        props.pile[props.pile.length - 2]
-          ? props.pile[props.pile.length - 2][0]
-          : "none"
-      } of ${
-        props.pile[props.pile.length - 2]
-          ? props.pile[props.pile.length - 2][1]
-          : "none"
-      }`;
+      const css = writecss(card);
+      const rank = css[0];
+      const suit = css[1];
+
+      msg =
+        msg +
+        `${props.name} played ${rank} of ${suit} and top card of pile was ${
+          props.pile[props.pile.length - 2]
+            ? props.pile[props.pile.length - 2][0]
+            : "none"
+        } of ${
+          props.pile[props.pile.length - 2]
+            ? props.pile[props.pile.length - 2][1]
+            : "none"
+        }`;
 
       props.socket.emit("turnComplete", {
         id: props.id,
@@ -150,6 +159,11 @@ function MyCard(props: MyCardProps) {
           card
         );
         // props.pile.push(card);
+
+        const css = writecss(card);
+        const rank = css[0];
+        const suit = css[1];
+        msg = msg + `${props.name} played ${rank} of ${suit} and `;
         props.setPile([...props.pile, card]);
         if (props.deck.length > 0) {
           props.player.partition.mycards.push(props.deck.pop());
@@ -184,17 +198,21 @@ function MyCard(props: MyCardProps) {
       }
 
       // alert("Turn Complete");
-      let msg = `${props.name} played ${card[0]} of ${
-        card[1]
-      } and top card of pile was ${
-        props.pile[props.pile.length - 2]
-          ? props.pile[props.pile.length - 2][0]
-          : "none"
-      } of ${
-        props.pile[props.pile.length - 2]
-          ? props.pile[props.pile.length - 2][1]
-          : "none"
-      }`;
+
+      const css = writecss(card);
+      const rank = css[0];
+      const suit = css[1];
+      msg =
+        msg +
+        `${props.name} played ${rank} of ${suit} and top card of pile was ${
+          props.pile[props.pile.length - 2]
+            ? props.pile[props.pile.length - 2][0]
+            : "none"
+        } of ${
+          props.pile[props.pile.length - 2]
+            ? props.pile[props.pile.length - 2][1]
+            : "none"
+        }`;
 
       props.socket.emit("turnComplete", {
         id: props.id,
@@ -246,6 +264,10 @@ function MyCard(props: MyCardProps) {
           card
         );
         // props.pile.push(card);
+        const css = writecss(card);
+        const rank = css[0];
+        const suit = css[1];
+        msg = msg + `${props.name} played ${rank} of ${suit} and `;
         props.setPile([...props.pile, card]);
         if (props.deck.length > 0) {
           console.log("this should never happen when facedown");
@@ -275,17 +297,22 @@ function MyCard(props: MyCardProps) {
       }
 
       // alert("Turn Complete");
-      let msg = `${props.name} played ${card[0]} of ${
-        card[1]
-      } and top card of pile was ${
-        props.pile[props.pile.length - 2]
-          ? props.pile[props.pile.length - 2][0]
-          : "none"
-      } of ${
-        props.pile[props.pile.length - 2]
-          ? props.pile[props.pile.length - 2][1]
-          : "none"
-      }`;
+
+      const css = writecss(card);
+      const rank = css[0];
+      const suit = css[1];
+
+      msg =
+        msg +
+        `${props.name} played ${rank} of ${suit} and top card of pile was ${
+          props.pile[props.pile.length - 2]
+            ? props.pile[props.pile.length - 2][0]
+            : "none"
+        } of ${
+          props.pile[props.pile.length - 2]
+            ? props.pile[props.pile.length - 2][1]
+            : "none"
+        }`;
 
       props.socket.emit("turnComplete", {
         id: props.id,
@@ -300,6 +327,11 @@ function MyCard(props: MyCardProps) {
         props.player.partition.mycards = props.player.partition.mycards.concat(
           props.pile
         );
+        props.player.partition.facedown = removeCard(
+          props.player.partition.facedown,
+          card
+        );
+        props.player.partition.mycards.push(card);
         props.socket.emit("turnComplete", {
           id: props.id,
           pile: [],
