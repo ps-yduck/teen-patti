@@ -14,24 +14,14 @@ function HomePage({ socket }: HomePageProps) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const navigate = useNavigate();
-  // // socket.on("startGame", (data) => {
-  // //   if (data === "start") {
-  // //     setLoading(false);
 
-  // //     setTimeout(() => {
-  // //       navigate("/game");
-  // //     }, 1000);
-  // //   } else if (data === "wait") {
-  // //     console.log("waiting");
-  // //     navigate("/atCapacity");
-  // //   }
-  // });
   const handleClick = (socket: Socket) => {
     // console.log("Socket ID:", socket.id);
     // Do something with the socket object, such as emit an event
     socket.emit("clientName", name, sessionStorage.getItem("id"));
     setLoading(true);
     socket.on("startGame", (data) => {
+      // waiting for reply from server to start game
       if (data === "start") {
         navigate("/game", { state: { name: name } });
       } else if (data === "wait") {
