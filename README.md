@@ -28,6 +28,7 @@
 4. When you have a card of lower rank than card in pile
 5. When top of pile card is 7 and you have no value card less than equal 7
 6. When top of pile card is 8 (or sequence of 8(s)) and after those 8 is a 7 so you follow rule 5
+7. When top of pile is 8 and after it is a value card then throw valid value card if have one. If not then only throw power card
 
 #### Some complex rules
 
