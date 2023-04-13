@@ -23,17 +23,17 @@
 2. When pile is empty you can throw any card (value or power)
 3. When pile is non empty you can throw power card only when you dont have a valid value card
 
-## When is a value card non valid and you are allowed to throw power card?
+#### When is a value card non valid and you are allowed to throw power card?
 
 4. When you have a card of lower rank than card in pile
 5. When top of pile card is 7 and you have no value card less than equal 7
 6. When top of pile card is 8 (or sequence of 8(s)) and after those 8 is a 7 so you follow rule 5
 
-## Some complex rules
+#### Some complex rules
 
 7. When throw 2 you can throw another card but again the checks for valid value cards in your hand happen. You cant straight away throw power card on two if have a valid value card
 
-## Burn of pile rules by server
+#### Burn of pile rules by server
 
 8. When server detect a player dont have valid value card or a power card in mycards, it will burn the pile and give the player whole pile and skips his turn
 9. same thing happen when player is playing from faceup cards, server reads faceup card and apply rule 8
