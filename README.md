@@ -32,10 +32,10 @@
 
 #### Some complex rules
 
-7. When throw 2 you can throw another card but again the checks for valid value cards in your hand happen. You cant straight away throw power card on two if have a valid value card
+8. When throw 2 you can throw another card but again the checks for valid value cards in your hand happen. You cant straight away throw power card on two if have a valid value card
 
 #### Burn of pile rules by server
 
-8. When server detect a player dont have valid value card or a power card in mycards, it will burn the pile and give the player whole pile and skips his turn
-9. same thing happen when player is playing from faceup cards, server reads faceup card and apply rule 8
-10. Incase of facedown server doesnt burn pile, client makes a move upon which it is decided to burn pile (when move invalid) and add it to my cards
+9. When server detect a player dont have valid value card or a power card in mycards, it will burn the pile and give the player whole pile and skips his turn
+10. same thing happen when player is playing from faceup cards, server reads faceup card and apply rule 8
+11. Incase of facedown server doesnt burn pile, client makes a move upon which it is decided to burn pile (when move invalid) and add it to my cards
