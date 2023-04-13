@@ -12,22 +12,13 @@ const socket = io("http://localhost:3001", { transports: ["websocket"] });
 socket.on("connect", () => {
   console.log("connected");
   console.log(socket.id);
-  // const id = useSelector((state:any) => state.clientId.value);
-  // if(id === ""){
-  //   dispatch
-  // }
+
   if (sessionStorage.getItem("id") === null) {
+    //creating unique client id for client
     sessionStorage.setItem("id", socket.id);
   }
   socket.emit("clientId", sessionStorage.getItem("id"));
 });
-// socket.on("clientId", (data) => {
-//   console.log(data);
-//   //socket.emit("message", "Hello from client");
-// });
-// socket.on("cliendId", (data) => {
-//   console.log(data);
-//   socket.emi
 
 function App() {
   return (

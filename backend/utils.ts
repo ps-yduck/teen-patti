@@ -1,5 +1,5 @@
 export function hasAnyValidCard(myCards: any, pile: any) {
-  // add condition when myCards is empty for faceupcards
+  // checks if has power card or value card gretaer than top card of pile, or value card relevent to power card at top pile
   for (let i = 0; i < myCards.length; i++) {
     if (
       moveValidInValue(pile, myCards[i]) ||
@@ -15,7 +15,10 @@ export function hasAnyValidCard(myCards: any, pile: any) {
 }
 
 export function moveValidInValue(pile: any, card: any) {
+  // check if gretaer than value, relevent to power card at top pile
+
   if (pile === undefined || pile.length === 0) {
+    //empty pile any move valid
     return true;
   }
   const pileRank = pile[pile.length - 1][0];
@@ -36,15 +39,22 @@ export function moveValidInValue(pile: any, card: any) {
     K: 13,
     A: 14,
   };
+  //top card 7
   if (pileRank === "7" && rankMap[cardRank] <= rankMap[pileRank]) {
     return true;
   } else if (pileRank === "7" && rankMap[cardRank] > rankMap[pileRank]) {
     return false;
   }
 
+  //top card 8
   if (pile[pile.length - 1][0] === "8") {
     let nextNonEightCard = cardEightAtTop(pile);
     if (
+      nextNonEightCard[0] === "7" &&
+      rankMap[cardRank] <= rankMap[nextNonEightCard[0]] //volatile
+    ) {
+      return true;
+    } else if (
       nextNonEightCard[0] === "7" &&
       rankMap[cardRank] > rankMap[nextNonEightCard[0]]
     ) {
@@ -66,6 +76,7 @@ export function moveValidInValue(pile: any, card: any) {
 }
 
 export function cardEightAtTop(pile: any) {
+  // go down pile to get non eight card, when consecutive eights at top
   let card = "";
   let i = pile.length - 1;
   while (i >= 0) {

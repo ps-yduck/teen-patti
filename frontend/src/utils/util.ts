@@ -76,6 +76,11 @@ export function moveValidInValue(pile: any, card: any) {
     let nextNonEightCard = cardEightAtTop(pile);
     if (
       nextNonEightCard[0] === "7" &&
+      rankMap[cardRank] <= rankMap[nextNonEightCard[0]] //volatile
+    ) {
+      return true;
+    } else if (
+      nextNonEightCard[0] === "7" &&
       rankMap[cardRank] > rankMap[nextNonEightCard[0]]
     ) {
       return false;

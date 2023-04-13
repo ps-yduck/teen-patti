@@ -31,7 +31,7 @@ function GamePage({ socket }: GamePageProps) {
   useEffect(() => {
     console.log("init event sent", name);
 
-    socket.emit("initGame", sessionStorage.getItem("id"));
+    socket.emit("initGame", sessionStorage.getItem("id")); //when game start get all clientsState
     socket.on("initState", (data) => {
       setPile(data.pile);
       setDeck(data.deck);
@@ -41,6 +41,7 @@ function GamePage({ socket }: GamePageProps) {
       setPlayerMe(data.clientCards[id]);
       let playerid = 1;
       for (const [key, value] of Object.entries(data.clientCards)) {
+        // set rest of the players card, other than yourself
         if (key !== id) {
           switch (playerid) {
             case 1:
@@ -60,6 +61,7 @@ function GamePage({ socket }: GamePageProps) {
       }
     });
     socket.on("newTurn", (data) => {
+      // get updated staet whjen someone compl turn
       console.log("new turn", data.pile);
       setTurn(data.turn);
       setDeck(data.deck);

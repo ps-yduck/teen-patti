@@ -26,11 +26,11 @@ function MyCard(props: MyCardProps) {
   let faceDownList: any = [];
   let myCardsList: any = [];
   let cardNotTwo = true;
-  let msg = "";
 
   //console.log("props pile error: ", props.pile);
-  const cardClickHandler = async (card: any) => {
-    let valid = false;
+  //typeOfCard: faceUp, faceDown, myCards
+  // handle mycard and faceup click
+  const cardClickHandler = (card: any, cardsInPlay: any, typeOfCard: any) => {
     if (props.gameOver) {
       alert("Game Over cant play");
       return;
@@ -39,6 +39,14 @@ function MyCard(props: MyCardProps) {
       alert("Not your turn");
       return;
     }
+    if (
+      typeOfCard === "faceUp" &&
+      props.player.partition.mycards.length !== 0
+    ) {
+      alert("You have cards in hand to play");
+      return;
+    }
+    let valid = false;
     cardNotTwo = true;
 
     console.log("card clicked: ", card);
@@ -48,22 +56,15 @@ function MyCard(props: MyCardProps) {
       card[0] === "8" ||
       card[0] === "1"
     ) {
-      console.log("power action card props.pile", card, props.pile);
-      valid = moveValidInPower(
-        props.player.partition.mycards,
-        props.pile,
-        card
-      );
+      // console.log("power action card props.pile", card, props.pile);
+      valid = moveValidInPower(cardsInPlay, props.pile, card);
       if (card[0] === "2" && valid) {
         alert("Throw another card");
-        props.player.partition.mycards = removeCard(
-          props.player.partition.mycards,
-          card
-        );
-        const css = writecss(card);
-        const rank = css[0];
-        const suit = css[1];
-        msg = msg + `${props.name} played ${rank} of ${suit} and `;
+        cardsInPlay = removeCard(cardsInPlay, card);
+        // const css = writecss(card);
+        // const rank = css[0];
+        // const suit = css[1];
+        // msg = msg + `${props.name} played ${rank} of ${suit} and `;
         // props.pile.push(card);
         props.setPile([...props.pile, card]);
         if (props.deck.length > 0) {
@@ -74,23 +75,14 @@ function MyCard(props: MyCardProps) {
       }
 
       if (card[0] === "1" && valid) {
-        console.log("10 action", card);
-        //props.setPile([]);
-        // add time delay
-        //console.log("wait");
-        //let wait = await new Promise((resolve) => setTimeout(resolve, 1000));
-        //console.log("wait done");
       }
     } else {
-      console.log("props.pile: ", props.pile);
+      //console.log("props.pile: ", props.pile);
       valid = moveValidInValue(props.pile, card);
     }
     if ((valid && cardNotTwo) || (props.pile.length === 0 && cardNotTwo)) {
       // pile.length cond added to continue throw any card on empty pile
-      props.player.partition.mycards = removeCard(
-        props.player.partition.mycards,
-        card
-      );
+      cardsInPlay = removeCard(cardsInPlay, card);
       props.pile.push(card);
       if (props.deck.length > 0) {
         props.player.partition.mycards.push(props.deck.pop());
@@ -101,118 +93,17 @@ function MyCard(props: MyCardProps) {
       const rank = css[0];
       const suit = css[1];
 
-      msg =
-        msg +
-        `${props.name} played ${rank} of ${suit} and top card of pile was ${
-          props.pile[props.pile.length - 2]
-            ? props.pile[props.pile.length - 2][0]
-            : "none"
-        } of ${
-          props.pile[props.pile.length - 2]
-            ? props.pile[props.pile.length - 2][1]
-            : "none"
-        }`;
-
-      props.socket.emit("turnComplete", {
-        id: props.id,
-        pile: props.pile,
-        partition: props.player.partition,
-        deck: props.deck,
-        msg: msg,
-      });
-    } else {
-      if (valid === false) {
-        alert("Invalid Move");
-      }
-    }
-  };
-  /// faceup cards click handler
-  const faceUpClickHandler = async (card: any) => {
-    let valid = false;
-    if (props.gameOver) {
-      alert("Game Over cant play");
-      return;
-    }
-    if (props.turn !== props.id) {
-      alert("Not your turn");
-      return;
-    }
-    if (props.player.partition.mycards.length !== 0) {
-      alert("You have cards in hand, invalid move");
-      return;
-    }
-    cardNotTwo = true;
-
-    console.log("card clicked: ", card);
-    if (
-      card[0] === "2" ||
-      card[0] === "7" ||
-      card[0] === "8" ||
-      card[0] === "1"
-    ) {
-      console.log("power action card props.pile", card, props.pile);
-      valid = moveValidInPower(props.player.partition.faceup, props.pile, card);
-      if (card[0] === "2" && valid) {
-        alert("Throw another card");
-        props.player.partition.faceup = removeCard(
-          props.player.partition.faceup,
-          card
-        );
-        // props.pile.push(card);
-
-        const css = writecss(card);
-        const rank = css[0];
-        const suit = css[1];
-        msg = msg + `${props.name} played ${rank} of ${suit} and `;
-        props.setPile([...props.pile, card]);
-        if (props.deck.length > 0) {
-          props.player.partition.mycards.push(props.deck.pop());
-        } else {
-          console.log("deck empty"); // just to check when faceup cards then deck is empty
-        }
-
-        cardNotTwo = false;
-      }
-
-      if (card[0] === "1" && valid) {
-        console.log("10 action", card);
-        //props.setPile([]);
-        // add time delay
-        //console.log("wait");
-        //let wait = await new Promise((resolve) => setTimeout(resolve, 1000));
-        //console.log("wait done");
-      }
-    } else {
-      console.log("props.pile: ", props.pile);
-      valid = moveValidInValue(props.pile, card);
-    }
-    if ((valid && cardNotTwo) || (props.pile.length === 0 && cardNotTwo)) {
-      props.player.partition.faceup = removeCard(
-        props.player.partition.faceup,
-        card
-      );
-      props.pile.push(card);
-      if (props.deck.length > 0) {
-        console.log("this should never happen when faceup");
-        props.player.partition.mycards.push(props.deck.pop());
-      }
-
-      // alert("Turn Complete");
-
-      const css = writecss(card);
-      const rank = css[0];
-      const suit = css[1];
-      msg =
-        msg +
-        `${props.name} played ${rank} of ${suit} and top card of pile was ${
-          props.pile[props.pile.length - 2]
-            ? props.pile[props.pile.length - 2][0]
-            : "none"
-        } of ${
-          props.pile[props.pile.length - 2]
-            ? props.pile[props.pile.length - 2][1]
-            : "none"
-        }`;
+      let msg = `${
+        props.name
+      } played ${rank} of ${suit} and top card of pile was ${
+        props.pile[props.pile.length - 2]
+          ? props.pile[props.pile.length - 2][0]
+          : "none"
+      } of ${
+        props.pile[props.pile.length - 2]
+          ? props.pile[props.pile.length - 2][1]
+          : "none"
+      }`;
 
       props.socket.emit("turnComplete", {
         id: props.id,
@@ -267,7 +158,7 @@ function MyCard(props: MyCardProps) {
         const css = writecss(card);
         const rank = css[0];
         const suit = css[1];
-        msg = msg + `${props.name} played ${rank} of ${suit} and `;
+
         props.setPile([...props.pile, card]);
         if (props.deck.length > 0) {
           console.log("this should never happen when facedown");
@@ -302,17 +193,17 @@ function MyCard(props: MyCardProps) {
       const rank = css[0];
       const suit = css[1];
 
-      msg =
-        msg +
-        `${props.name} played ${rank} of ${suit} and top card of pile was ${
-          props.pile[props.pile.length - 2]
-            ? props.pile[props.pile.length - 2][0]
-            : "none"
-        } of ${
-          props.pile[props.pile.length - 2]
-            ? props.pile[props.pile.length - 2][1]
-            : "none"
-        }`;
+      let msg = `${
+        props.name
+      } played ${rank} of ${suit} and top card of pile was ${
+        props.pile[props.pile.length - 2]
+          ? props.pile[props.pile.length - 2][0]
+          : "none"
+      } of ${
+        props.pile[props.pile.length - 2]
+          ? props.pile[props.pile.length - 2][1]
+          : "none"
+      }`;
 
       props.socket.emit("turnComplete", {
         id: props.id,
@@ -343,30 +234,7 @@ function MyCard(props: MyCardProps) {
     }
   };
 
-  try {
-    faceUpList = props.player.partition.faceup.map((card: any, key: any) => {
-      const css = writecss(card);
-      let suit = css[1];
-      let rank = css[0];
-
-      return (
-        <li>
-          <a
-            className={`card rank-${css[0]} ${css[1]}`}
-            onClick={() => {
-              faceUpClickHandler(card);
-            }}
-          >
-            <span className="rank">{css[0]}</span>
-            <span className="suit"> {getSuitSymbol(css[1])}</span>
-          </a>
-        </li>
-      );
-    });
-  } catch (e) {
-    console.log("gameplayer error: ", e);
-  }
-
+  //html for mycards
   try {
     myCardsList = props.player.partition.mycards.map((card: any) => {
       const css = writecss(card);
@@ -378,7 +246,7 @@ function MyCard(props: MyCardProps) {
           <a
             className={`card rank-${css[0]} ${css[1]}`}
             onClick={() => {
-              cardClickHandler(card);
+              cardClickHandler(card, props.player.partition.mycards, "mycards");
             }}
           >
             <span className="rank">{css[0]}</span>
@@ -391,6 +259,32 @@ function MyCard(props: MyCardProps) {
     console.log("gameplayer error: ", e);
   }
 
+  //html for faceup
+  try {
+    faceUpList = props.player.partition.faceup.map((card: any, key: any) => {
+      const css = writecss(card);
+      let suit = css[1];
+      let rank = css[0];
+
+      return (
+        <li>
+          <a
+            className={`card rank-${css[0]} ${css[1]}`}
+            onClick={() => {
+              cardClickHandler(card, props.player.partition.faceup, "faceUp");
+            }}
+          >
+            <span className="rank">{css[0]}</span>
+            <span className="suit"> {getSuitSymbol(css[1])}</span>
+          </a>
+        </li>
+      );
+    });
+  } catch (e) {
+    console.log("gameplayer error: ", e);
+  }
+
+  //html for facedown
   try {
     faceDownList = props.player.partition.facedown.map((card: any) => {
       return (
@@ -427,3 +321,105 @@ function MyCard(props: MyCardProps) {
 }
 
 export default MyCard;
+
+/// faceup cards click handler
+// const faceUpClickHandler = async (card: any) => {
+//   let valid = false;
+//   if (props.gameOver) {
+//     alert("Game Over cant play");
+//     return;
+//   }
+//   if (props.turn !== props.id) {
+//     alert("Not your turn");
+//     return;
+//   }
+//   if (cardsInPlay.length !== 0) {
+//     alert("You have cards in hand, invalid move");
+//     return;
+//   }
+//   cardNotTwo = true;
+
+//   console.log("card clicked: ", card);
+//   if (
+//     card[0] === "2" ||
+//     card[0] === "7" ||
+//     card[0] === "8" ||
+//     card[0] === "1"
+//   ) {
+//     console.log("power action card props.pile", card, props.pile);
+//     valid = moveValidInPower(props.player.partition.faceup, props.pile, card);
+//     if (card[0] === "2" && valid) {
+//       alert("Throw another card");
+//       props.player.partition.faceup = removeCard(
+//         props.player.partition.faceup,
+//         card
+//       );
+//       // props.pile.push(card);
+
+//       const css = writecss(card);
+//       const rank = css[0];
+//       const suit = css[1];
+//       msg = msg + `${props.name} played ${rank} of ${suit} and `;
+//       props.setPile([...props.pile, card]);
+//       if (props.deck.length > 0) {
+//         cardsInPlay.push(props.deck.pop());
+//       } else {
+//         console.log("deck empty"); // just to check when faceup cards then deck is empty
+//       }
+
+//       cardNotTwo = false;
+//     }
+
+//     if (card[0] === "1" && valid) {
+//       console.log("10 action", card);
+//       //props.setPile([]);
+//       // add time delay
+//       //console.log("wait");
+//       //let wait = await new Promise((resolve) => setTimeout(resolve, 1000));
+//       //console.log("wait done");
+//     }
+//   } else {
+//     console.log("props.pile: ", props.pile);
+//     valid = moveValidInValue(props.pile, card);
+//   }
+//   if ((valid && cardNotTwo) || (props.pile.length === 0 && cardNotTwo)) {
+//     props.player.partition.faceup = removeCard(
+//       props.player.partition.faceup,
+//       card
+//     );
+//     props.pile.push(card);
+//     if (props.deck.length > 0) {
+//       console.log("this should never happen when faceup");
+//       cardsInPlay.push(props.deck.pop());
+//     }
+
+//     // alert("Turn Complete");
+
+//     const css = writecss(card);
+//     const rank = css[0];
+//     const suit = css[1];
+//     msg =
+//       msg +
+//       `${props.name} played ${rank} of ${suit} and top card of pile was ${
+//         props.pile[props.pile.length - 2]
+//           ? props.pile[props.pile.length - 2][0]
+//           : "none"
+//       } of ${
+//         props.pile[props.pile.length - 2]
+//           ? props.pile[props.pile.length - 2][1]
+//           : "none"
+//       }`;
+
+//     props.socket.emit("turnComplete", {
+//       id: props.id,
+//       pile: props.pile,
+//       partition: props.player.partition,
+//       deck: props.deck,
+//       msg: msg,
+//     });
+//   } else {
+//     if (valid === false) {
+//       alert("Invalid Move");
+//     }
+//   }
+// };
