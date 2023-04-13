@@ -51,7 +51,7 @@ const createBiasedPartition = (cardsDeck) => {
   };
 };
 
-const odds_for_player1 = true; // let it true to give best cards to player1 to check disable condition on winning game, by default false
+const odds_for_player1 = false; // let it true to give best cards to player1 to check disable condition on winning game, by default false
 const cardsDeck = [
   "2S",
   "3S",
