@@ -16,6 +16,8 @@
 
 1. go to server.ts file in backend
 2. On Line 52 set player1 odds to true
+3. Go to frontend -> components -> Game -> MyCards.tsx line 295. Uncomment it to see facedown card name
+------------------------------------------------------------------------------------------------------------------------------
 
 ## Instructions to play game and some rules I modified based on my understanding of teen patti (IMPORTANT)
 
