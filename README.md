@@ -15,7 +15,7 @@
 ## Instructions to create bias player with best cards to make him win quickly and test game win condition
 
 1. go to server.ts file in backend
-2. On Line 54 set player1 odds to true
+2. On Line 52 set player1 odds to true
 
 ## Instructions to play game and some rules I modified based on my understanding of teen patti (IMPORTANT)
 
