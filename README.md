@@ -28,7 +28,7 @@
 4. When you have a card of lower rank than card in pile
 5. When top of pile card is 7 and you have no value card less than equal 7
 6. When top of pile card is 8 (or sequence of 8(s)) and after those 8 is a 7 so you follow rule 5
-7. When top of pile is 8 and after it is a value card then throw valid value card if have one. If not then only throw power card
+7. When top of pile is 8 and below it is a value card then throw valid value card if have one. If not then only throw power card
 
 #### Some complex rules
 
@@ -37,5 +37,5 @@
 #### Burn of pile rules by server
 
 9. When server detect a player dont have valid value card or a power card in mycards, it will burn the pile and give the player whole pile and skips his turn
-10. same thing happen when player is playing from faceup cards, server reads faceup card and apply rule 8
+10. same thing happen when player is playing from faceup cards, server reads faceup card and apply rule 9
 11. Incase of facedown server doesnt burn pile, client makes a move upon which it is decided to burn pile (when move invalid) and add it to my cards
