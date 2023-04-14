@@ -14,14 +14,14 @@ function CenterTable({ socket, pile }: CenterTableProps) {
   return (
     <div className="card-area">
       <ul className="hand remove-margin">
-        {pile.map((card: any) => {
+        {pile.map((card: any, key: any) => {
           // add new card at end of pile as styled that way
           const css = writecss(card);
           let suit = css[1];
           let rank = css[0];
 
           return (
-            <li>
+            <li key={key}>
               <div className={`card rank-${css[0]} ${css[1]}`}>
                 <span className="rank">{css[0]}</span>
                 <span className="suit"> {getSuitSymbol(css[1])}</span>

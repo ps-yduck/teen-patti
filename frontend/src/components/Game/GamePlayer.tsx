@@ -13,15 +13,15 @@ interface GamePlayerProps {
 
 function GamePlayer(props: GamePlayerProps) {
   let faceUpList: any = [];
-  console.log("props.player: ", props.player);
+  //console.log("props.player: ", props.player);
   try {
-    faceUpList = props.player.partition.faceup.map((card: any) => {
+    faceUpList = props.player.partition.faceup.map((card: any, key: any) => {
       const css = writecss(card);
       let suit = css[1];
       let rank = css[0];
 
       return (
-        <li>
+        <li key={key}>
           <div className={`card rank-${css[0]} ${css[1]}`}>
             <span className="rank">{css[0]}</span>
             <span className="suit"> {getSuitSymbol(css[1])}</span>
@@ -30,7 +30,7 @@ function GamePlayer(props: GamePlayerProps) {
       );
     });
   } catch (e) {
-    console.log("gameplayer error: ", e);
+    //console.log("gameplayer error: ", e);
   }
 
   return (

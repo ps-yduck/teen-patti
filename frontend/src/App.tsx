@@ -10,8 +10,8 @@ import GamePage from "./components/Game/Game";
 
 const socket = io("http://localhost:3001", { transports: ["websocket"] });
 socket.on("connect", () => {
-  console.log("connected");
-  console.log(socket.id);
+  //console.log("connected");
+  //console.log(socket.id);
 
   if (sessionStorage.getItem("id") === null) {
     //creating unique client id for client

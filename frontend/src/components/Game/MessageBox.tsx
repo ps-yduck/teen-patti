@@ -9,13 +9,17 @@ interface MessageProps {
   msg: any;
 }
 function MessageBox({ socket, msg }: MessageProps) {
-  console.log("msg", msg);
+  //console.log("msg", msg);
   return (
     <div className="right-side-container messages-container">
       <h1>Messages</h1>
       <div className="message-box">
-        {msg.reverse().map((m: any) => {
-          return <div className="message-content-container">{m}</div>;
+        {msg.reverse().map((m: any, key: any) => {
+          return (
+            <div key={key} className="message-content-container">
+              {m}
+            </div>
+          );
         })}
       </div>
     </div>

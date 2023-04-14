@@ -29,7 +29,7 @@ function GamePage({ socket }: GamePageProps) {
   const name = state.state.name;
 
   useEffect(() => {
-    console.log("init event sent", name);
+    //console.log("init event sent", name);
 
     socket.emit("initGame", sessionStorage.getItem("id")); //when game start get all clientsState
     socket.on("initState", (data) => {
@@ -62,7 +62,7 @@ function GamePage({ socket }: GamePageProps) {
     });
     socket.on("newTurn", (data) => {
       // get updated staet whjen someone compl turn
-      console.log("new turn", data.pile);
+      //console.log("new turn", data.pile);
       setTurn(data.turn);
       setDeck(data.deck);
       setPile(data.pile);
@@ -90,12 +90,12 @@ function GamePage({ socket }: GamePageProps) {
       }
     });
     socket.on("gameOver", (data) => {
-      console.log("game over", data);
+      //console.log("game over", data);
       setMsg(data.winnermsg);
       setGameOver(true);
     });
   }, []);
-  console.log("rendered");
+  //console.log("rendered");
 
   return (
     <>

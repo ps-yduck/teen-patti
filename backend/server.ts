@@ -28,23 +28,21 @@ function removeCard(cardsDeck, card) {
   for (let i = 0; i < cardsDeck.length; i++) {
     if (cardsDeck[i] === card) {
       cardsDeck.splice(i, 1);
-      console.log("return", cardsDeck);
+      //console.log("return", cardsDeck);
       return cardsDeck;
     }
   }
 }
 const createBiasedPartition = (cardsDeck) => {
   let cards: any = cardsDeck;
-  console.log("err", cards);
+  //console.log("err", cards);
 
   let biasedPart: any = ["7S", "2C", "7C", "AH", "8S", "8C", "KD", "1S", "1C"];
   for (let i = 0; i < 9; i++) {
     // remove bias cards from cardsDeck
     cards = removeCard(cards, biasedPart[i]);
   }
-  console.log("biasedPart", biasedPart);
-  console.log("remainingcards", cards);
-  console.log("remainingcards length", cards.length);
+
   return {
     part: biasedPart,
     remainingCards: cards,
@@ -139,17 +137,18 @@ io.on("connection", (socket) => {
   //if id in gameroomplayer mean refresh from game page so add it back to room
 
   socket.on("clientId", (id) => {
-    console.log("Received clientId:", id); // set a unique id (based user initial socket id which is stored in his session storage)
+    //console.log("Received clientId:", id); // set a unique id (based user initial socket id which is stored in his session storage)
     clientMap.set(id, socket.id);
   });
 
   //console.log(clientMap);
   socket.on("clientName", (name, id) => {
     //this is not called on refresh at game page as it was called from home
-    console.log("hgereeeee");
+    //console.log("hgereeeee");
     players += 1;
     if (players <= 4) {
       if (players === 1 && odds_for_player1) {
+        //player 1 biased
         gameRoomPlayers.set(id, name); // add to gameroom map
         socket.join(gameRoom); // join room
         let cardPartition = createBiasedPartition(remainingCards);
@@ -195,26 +194,26 @@ io.on("connection", (socket) => {
     //always call on refresh of gamepage , if some one reconnect add them to gameroom
     if (gameRoomPlayers.has(id)) {
       socket.join(gameRoom);
-      console.log("refreshed from game page");
+      //console.log("refreshed from game page");
     }
 
-    console.log("initGame", id);
+    //console.log("initGame", id);
 
-    console.log("clientsState", clientsState);
+    //console.log("clientsState", clientsState);
 
     io.to(socket.id).emit("initState", clientsState);
   });
 
   socket.on("turnComplete", (data) => {
     //when client finish turn
-    console.log("turnComplete", data);
+    //console.log("turnComplete", data);
     //game over condition
     if (
       data.partition.facedown.length === 0 &&
       data.partition.faceup.length === 0 &&
       data.partition.mycards.length === 0
     ) {
-      console.log("game over");
+      //console.log("game over");
       let winnermsg = `${clientsState.clientCards[data.id].name} won the game`;
       data = {
         winnermsg: clientsState.msg.concat(winnermsg),
@@ -247,7 +246,7 @@ io.on("connection", (socket) => {
       clientsState.deck = data.deck;
       clientsState.clientCards[data.id].partition = data.partition; //update partition of client who took turn
       //console.log("new turn", clientsState.turn);
-      console.log("new cleintsState", clientsState);
+      //console.log("new cleintsState", clientsState);
       if (
         (clientsState.clientCards[clientsState.turn].partition.mycards.length >
           0 &&

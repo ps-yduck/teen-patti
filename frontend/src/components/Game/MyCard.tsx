@@ -25,7 +25,7 @@ function MyCard(props: MyCardProps) {
   let faceUpList: any = [];
   let faceDownList: any = [];
   let myCardsList: any = [];
-  let cardNotTwo = true;
+  let cardNotTwo = true; //force player to thrwo another card
 
   //console.log("props pile error: ", props.pile);
   //typeOfCard: faceUp, faceDown, myCards
@@ -49,7 +49,7 @@ function MyCard(props: MyCardProps) {
     let valid = false;
     cardNotTwo = true;
 
-    console.log("card clicked: ", card);
+    //console.log("card clicked: ", card);
     if (
       card[0] === "2" ||
       card[0] === "7" ||
@@ -78,6 +78,7 @@ function MyCard(props: MyCardProps) {
       }
     } else {
       //console.log("props.pile: ", props.pile);
+      //non power card
       valid = moveValidInValue(props.pile, card);
     }
     if ((valid && cardNotTwo) || (props.pile.length === 0 && cardNotTwo)) {
@@ -138,14 +139,14 @@ function MyCard(props: MyCardProps) {
     }
     cardNotTwo = true;
 
-    console.log("card clicked: ", card);
+    //console.log("card clicked: ", card);
     if (
       card[0] === "2" ||
       card[0] === "7" ||
       card[0] === "8" ||
       card[0] === "1"
     ) {
-      console.log("power action card props.pile", card, props.pile);
+      //console.log("power action card props.pile", card, props.pile);
       valid = true;
 
       if (card[0] === "2" && valid) {
@@ -161,7 +162,7 @@ function MyCard(props: MyCardProps) {
 
         props.setPile([...props.pile, card]);
         if (props.deck.length > 0) {
-          console.log("this should never happen when facedown");
+          //console.log("this should never happen when facedown");
           props.player.partition.mycards.push(props.deck.pop());
         }
 
@@ -169,10 +170,10 @@ function MyCard(props: MyCardProps) {
       }
 
       if (card[0] === "1" && valid) {
-        console.log("10 action", card);
+        //console.log("10 action", card);
       }
     } else {
-      console.log("props.pile: ", props.pile);
+      //console.log("props.pile: ", props.pile);
       valid = moveValidInValue(props.pile, card);
     }
     if ((valid && cardNotTwo) || (props.pile.length === 0 && cardNotTwo)) {
@@ -183,7 +184,7 @@ function MyCard(props: MyCardProps) {
       );
       props.pile.push(card);
       if (props.deck.length > 0) {
-        console.log("this should never happen when facedown");
+        //console.log("this should never happen when facedown");
         props.player.partition.mycards.push(props.deck.pop());
       }
 
@@ -214,6 +215,7 @@ function MyCard(props: MyCardProps) {
       });
     } else {
       if (valid === false) {
+        // false move then the face down card added to mycards and pile is given to player
         alert("Invalid Move, you are going to get the pile");
         props.player.partition.mycards = props.player.partition.mycards.concat(
           props.pile
@@ -236,13 +238,13 @@ function MyCard(props: MyCardProps) {
 
   //html for mycards
   try {
-    myCardsList = props.player.partition.mycards.map((card: any) => {
+    myCardsList = props.player.partition.mycards.map((card: any, key: any) => {
       const css = writecss(card);
       let suit = css[1];
       let rank = css[0];
 
       return (
-        <li>
+        <li key={key}>
           <a
             className={`card rank-${css[0]} ${css[1]}`}
             onClick={() => {
@@ -256,7 +258,7 @@ function MyCard(props: MyCardProps) {
       );
     });
   } catch (e) {
-    console.log("gameplayer error: ", e);
+    //console.log("gameplayer error: ", e);
   }
 
   //html for faceup
@@ -281,23 +283,25 @@ function MyCard(props: MyCardProps) {
       );
     });
   } catch (e) {
-    console.log("gameplayer error: ", e);
+    //console.log("gameplayer error: ", e);
   }
 
   //html for facedown
   try {
-    faceDownList = props.player.partition.facedown.map((card: any) => {
-      return (
-        <li>
-          <p>{card}</p>
-          <a className="card back" onClick={() => faceDownClickHandler(card)}>
-            <div className="card back">*</div>
-          </a>
-        </li>
-      );
-    });
+    faceDownList = props.player.partition.facedown.map(
+      (card: any, key: any) => {
+        return (
+          <li>
+            {/* <p>{card}</p> */}
+            <a className="card back" onClick={() => faceDownClickHandler(card)}>
+              <div className="card back">*</div>
+            </a>
+          </li>
+        );
+      }
+    );
   } catch (e) {
-    console.log("gameplayer error: ", e);
+    //console.log("gameplayer error: ", e);
   }
 
   return (
